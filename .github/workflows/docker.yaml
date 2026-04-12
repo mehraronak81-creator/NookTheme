@@ -3,12 +3,6 @@ name: Docker
 on:
   push:
     branches:
-      - develop
-      - 1.0-develop
-      - release/v1.11.5
-  pull_request:
-    branches:
-      - develop
       - 1.0-develop
   release:
     types:
@@ -18,7 +12,7 @@ jobs:
   push:
     name: Push
     runs-on: ubuntu-24.04
-    if: "!contains(github.ref, 'develop') || (!contains(github.event.head_commit.message, 'skip docker') && !contains(github.event.head_commit.message, 'docker skip'))"
+    if: "!contains(github.event.head_commit.message, 'skip docker') && !contains(github.event.head_commit.message, 'docker skip')"
     permissions:
       contents: read
       packages: write
@@ -50,7 +44,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
-          password: ${{ secrets.TOKEN }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Update version
         if: "github.event_name == 'release' && github.event.action == 'published'"
