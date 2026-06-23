@@ -43,8 +43,8 @@ jobs:
         if: "github.event_name != 'pull_request'"
         with:
           registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          username: Lunna5
+          password: ${{ secrets.REGISTRY_TOKEN }}
 
       - name: Update version
         if: "github.event_name == 'release' && github.event.action == 'published'"
