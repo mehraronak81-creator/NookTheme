@@ -34,7 +34,7 @@ export default forwardRef<HTMLFormElement, Props>(({ title, ...props }, ref) => 
         <FlashMessageRender css={tw`mb-3 px-1`} />
         <Form {...props} ref={ref}>
             <div css={tw`md:flex w-full bg-white/95 backdrop-blur-sm shadow-[0_20px_60px_-20px_rgba(15,23,42,0.35)] rounded-2xl border border-neutral-200 overflow-hidden mx-1 md:mx-0`}>
-                <div css={tw`flex-none select-none mb-6 md:mb-0 self-center p-6 md:p-8 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 md:min-w-[240px]`}>
+                <div css={tw`flex-none select-none mb-6 md:mb-0 self-center p-6 md:p-8 bg-gradient-to-br from-neutral-800 via-neutral-700 to-neutral-900 md:min-w-[240px]`}>
                     <div css={tw`rounded-2xl bg-white/10 p-4 shadow-inner backdrop-blur-sm`}>
                         <img src={'/assets/svgs/pterodactyl.svg'} css={tw`block w-40 md:w-48 mx-auto`} />
                     </div>
