@@ -43,10 +43,12 @@ export default () => {
         if (recaptchaEnabled && !tokenRef.current) {
             if (!captchaReady || !ref.current) {
                 pendingCaptchaExecution.current = true;
+                setSubmitting(false);
                 return;
             }
 
             pendingCaptchaExecution.current = false;
+            setSubmitting(false);
             ref.current.execute().catch((error) => {
                 console.error(error);
 
