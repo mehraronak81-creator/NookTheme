@@ -25,6 +25,7 @@ const LoginContainer = ({ history }: RouteComponentProps) => {
 
     const { clearFlashes, clearAndAddHttpError } = useFlash();
     const { enabled: recaptchaEnabled, siteKey } = useStoreState((state) => state.settings.data!.recaptcha);
+    const canUseRecaptcha = Boolean(recaptchaEnabled && siteKey && siteKey !== '_invalid_key');
 
     useEffect(() => {
         clearFlashes();
@@ -39,7 +40,7 @@ const LoginContainer = ({ history }: RouteComponentProps) => {
 
         // If there is no token in the state yet, request the token and then abort this submit request
         // since it will be re-submitted when the recaptcha data is returned by the component.
-        if (recaptchaEnabled && !tokenRef.current) {
+        if (canUseRecaptcha && !tokenRef.current) {
             if (!captchaReady || !ref.current) {
                 pendingCaptchaExecution.current = true;
                 setSubmitting(false);
@@ -100,7 +101,7 @@ const LoginContainer = ({ history }: RouteComponentProps) => {
                             Sign in
                         </Button>
                     </div>
-                    {recaptchaEnabled && (
+                    {canUseRecaptcha && (
                         <Reaptcha
                             ref={ref}
                             size={'invisible'}

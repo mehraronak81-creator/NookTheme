@@ -26,6 +26,7 @@ export default () => {
 
     const { clearFlashes, addFlash } = useFlash();
     const { enabled: recaptchaEnabled, siteKey } = useStoreState((state) => state.settings.data!.recaptcha);
+    const canUseRecaptcha = Boolean(recaptchaEnabled && siteKey && siteKey !== '_invalid_key');
 
     useEffect(() => {
         clearFlashes();
@@ -40,7 +41,7 @@ export default () => {
 
         // If there is no token in the state yet, request the token and then abort this submit request
         // since it will be re-submitted when the recaptcha data is returned by the component.
-        if (recaptchaEnabled && !tokenRef.current) {
+        if (canUseRecaptcha && !tokenRef.current) {
             if (!captchaReady || !ref.current) {
                 pendingCaptchaExecution.current = true;
                 setSubmitting(false);
@@ -103,7 +104,7 @@ export default () => {
                             Send Email
                         </Button>
                     </div>
-                    {recaptchaEnabled && (
+                    {canUseRecaptcha && (
                         <Reaptcha
                             ref={ref}
                             size={'invisible'}
