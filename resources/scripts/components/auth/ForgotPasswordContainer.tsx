@@ -19,7 +19,9 @@ interface Values {
 
 export default () => {
     const ref = useRef<Reaptcha>(null);
+    const pendingCaptchaExecution = useRef(false);
     const [token, setToken] = useState('');
+    const [captchaReady, setCaptchaReady] = useState(false);
 
     const { clearFlashes, addFlash } = useFlash();
     const { enabled: recaptchaEnabled, siteKey } = useStoreState((state) => state.settings.data!.recaptcha);
@@ -34,7 +36,13 @@ export default () => {
         // If there is no token in the state yet, request the token and then abort this submit request
         // since it will be re-submitted when the recaptcha data is returned by the component.
         if (recaptchaEnabled && !token) {
-            ref.current!.execute().catch((error) => {
+            if (!captchaReady || !ref.current) {
+                pendingCaptchaExecution.current = true;
+                return;
+            }
+
+            pendingCaptchaExecution.current = false;
+            ref.current.execute().catch((error) => {
                 console.error(error);
 
                 setSubmitting(false);
@@ -92,6 +100,15 @@ export default () => {
                             ref={ref}
                             size={'invisible'}
                             sitekey={siteKey || '_invalid_key'}
+                            onLoad={() => {
+                                setCaptchaReady(true);
+                                if (pendingCaptchaExecution.current && ref.current) {
+                                    pendingCaptchaExecution.current = false;
+                                    ref.current.execute().catch((error) => {
+                                        console.error(error);
+                                    });
+                                }
+                            }}
                             onVerify={(response) => {
                                 setToken(response);
                                 submitForm();
