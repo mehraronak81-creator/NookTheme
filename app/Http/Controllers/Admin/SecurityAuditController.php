@@ -8,8 +8,8 @@ use Illuminate\Http\JsonResponse;
 use Pterodactyl\Models\User;
 use Pterodactyl\Models\ApiKey;
 use Pterodactyl\Models\ActivityLog;
-use Pterodactyl\Models\Session;
 use Pterodactyl\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class SecurityAuditController extends Controller
 {
@@ -30,20 +30,26 @@ class SecurityAuditController extends Controller
             ->limit(100)
             ->get();
 
-        // Suspicious IPs: IPs with 5+ failed logins in last 24h
+        // Suspicious IPs: IPs with 3+ failed logins in last 24h
         $suspiciousIps = ActivityLog::where('event', 'like', '%failed%')
             ->where('timestamp', '>=', now()->subDay())
             ->selectRaw('ip, COUNT(*) as attempt_count')
             ->groupBy('ip')
             ->having('attempt_count', '>=', 3)
-            ->orderBy('attempt_count', 'desc')
+            ->orderByRaw('attempt_count DESC')
             ->get();
 
-        // Active sessions
-        $activeSessions = Session::where('last_activity', '>=', now()->subHours(2)->timestamp)
-            ->orderBy('last_activity', 'desc')
-            ->limit(50)
-            ->get();
+        // Active sessions from the sessions table
+        $activeSessions = collect();
+        try {
+            $activeSessions = DB::table('sessions')
+                ->where('last_activity', '>=', now()->subHours(2)->timestamp)
+                ->orderBy('last_activity', 'desc')
+                ->limit(50)
+                ->get();
+        } catch (\Exception $e) {
+            // Sessions table may not exist if using different session driver
+        }
 
         // API keys overview
         $apiKeys = ApiKey::with('user')
@@ -78,7 +84,7 @@ class SecurityAuditController extends Controller
      */
     public function destroySession(Request $request, string $sessionId): JsonResponse
     {
-        Session::where('id', $sessionId)->delete();
+        DB::table('sessions')->where('id', $sessionId)->delete();
         return new JsonResponse(['success' => true, 'message' => 'Session terminated.']);
     }
 

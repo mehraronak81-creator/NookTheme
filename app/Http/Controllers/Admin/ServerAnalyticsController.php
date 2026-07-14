@@ -37,10 +37,11 @@ class ServerAnalyticsController extends Controller
 
         // Per-user server counts
         $userServerCounts = User::withCount('servers')
-            ->having('servers_count', '>', 0)
             ->orderBy('servers_count', 'desc')
             ->limit(20)
-            ->get();
+            ->get()
+            ->filter(fn($u) => $u->servers_count > 0)
+            ->values();
 
         // Resource allocation summary
         $totalAllocatedMem = Server::sum('memory');

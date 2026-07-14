@@ -60,17 +60,11 @@ class BaseController extends Controller
 
         // Per-node stats for health monitor
         $nodeStats = Node::withCount('servers')
-            ->with(['servers' => function ($query) {
-                $query->select('node_id')
-                    ->selectRaw('SUM(memory) as total_memory_used')
-                    ->selectRaw('SUM(disk) as total_disk_used')
-                    ->groupBy('node_id');
-            }])
+            ->with('location')
             ->get()
             ->map(function ($node) {
-                $serverAgg = $node->servers->first();
-                $memUsed = $serverAgg ? (int)$serverAgg->total_memory_used : 0;
-                $diskUsed = $serverAgg ? (int)$serverAgg->total_disk_used : 0;
+                $memUsed = (int) Server::where('node_id', $node->id)->sum('memory');
+                $diskUsed = (int) Server::where('node_id', $node->id)->sum('disk');
                 $memMax = $node->memory * (1 + ($node->memory_overallocate / 100));
                 $diskMax = $node->disk * (1 + ($node->disk_overallocate / 100));
                 return [
