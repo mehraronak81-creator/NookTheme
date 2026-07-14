@@ -283,6 +283,48 @@
     </div>
 </div>
 
+{{-- Admin Operations Panel --}}
+<div class="row">
+    <div class="col-md-6">
+        <div class="box box-success">
+            <div class="box-header with-border">
+                <h3 class="box-title"><i class="fa fa-shield" style="margin-right:8px;color:var(--vh-accent,#6c5ce7);"></i>Operations Summary</h3>
+            </div>
+            <div class="box-body">
+                <ul style="padding-left:18px;line-height:1.8;color:var(--vh-text-secondary);">
+                    <li><strong>{{ $activeServers }}</strong> active servers currently running.</li>
+                    <li><strong>{{ $nodesInMaintenance }}</strong> nodes are currently in maintenance mode.</li>
+                    <li><strong>{{ $allocationsUsed }}</strong> allocations are in use from <strong>{{ $allocations }}</strong> available.</li>
+                    <li>Use the quick actions panel to manage users, nodes, servers, and cleanup jobs faster.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="box box-info">
+            <div class="box-header with-border">
+                <h3 class="box-title"><i class="fa fa-life-ring" style="margin-right:8px;color:var(--vh-accent,#6c5ce7);"></i>Support & Monitoring</h3>
+            </div>
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-xs-6 text-center" style="margin-bottom:10px;">
+                        <a href="{{ route('admin.health') }}" class="btn btn-info btn-block"><i class="fa fa-heartbeat"></i> Health</a>
+                    </div>
+                    <div class="col-xs-6 text-center" style="margin-bottom:10px;">
+                        <a href="{{ route('admin.activity') }}" class="btn btn-default btn-block"><i class="fa fa-history"></i> Activity</a>
+                    </div>
+                    <div class="col-xs-6 text-center" style="margin-bottom:10px;">
+                        <a href="{{ route('admin.trashbin') }}" class="btn btn-danger btn-block"><i class="fa fa-trash"></i> Trash Bin</a>
+                    </div>
+                    <div class="col-xs-6 text-center" style="margin-bottom:10px;">
+                        <a href="{{ route('admin.maintenance') }}" class="btn btn-warning btn-block"><i class="fa fa-wrench"></i> Maintenance</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 {{-- Recent Activity --}}
 <div class="row">
     <div class="col-xs-12">
