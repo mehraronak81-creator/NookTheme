@@ -20,6 +20,7 @@ interface Values {
 export default () => {
     const ref = useRef<Reaptcha>(null);
     const pendingCaptchaExecution = useRef(false);
+    const tokenRef = useRef('');
     const [token, setToken] = useState('');
     const [captchaReady, setCaptchaReady] = useState(false);
 
@@ -30,12 +31,16 @@ export default () => {
         clearFlashes();
     }, []);
 
+    useEffect(() => {
+        tokenRef.current = token;
+    }, [token]);
+
     const handleSubmission = ({ email }: Values, { setSubmitting, resetForm }: FormikHelpers<Values>) => {
         clearFlashes();
 
         // If there is no token in the state yet, request the token and then abort this submit request
         // since it will be re-submitted when the recaptcha data is returned by the component.
-        if (recaptchaEnabled && !token) {
+        if (recaptchaEnabled && !tokenRef.current) {
             if (!captchaReady || !ref.current) {
                 pendingCaptchaExecution.current = true;
                 return;
@@ -52,7 +57,7 @@ export default () => {
             return;
         }
 
-        requestPasswordResetEmail(email, token)
+        requestPasswordResetEmail(email, tokenRef.current)
             .then((response) => {
                 resetForm();
                 addFlash({ type: 'success', title: 'Success', message: response });
@@ -62,6 +67,7 @@ export default () => {
                 addFlash({ type: 'error', title: 'Error', message: httpErrorToHuman(error) });
             })
             .then(() => {
+                tokenRef.current = '';
                 setToken('');
                 if (ref.current) ref.current.reset();
 
@@ -110,11 +116,13 @@ export default () => {
                                 }
                             }}
                             onVerify={(response) => {
+                                tokenRef.current = response;
                                 setToken(response);
                                 submitForm();
                             }}
                             onExpire={() => {
                                 setSubmitting(false);
+                                tokenRef.current = '';
                                 setToken('');
                             }}
                         />
