@@ -9,6 +9,20 @@ Route::get('/system-health/json', [Admin\BaseController::class, 'systemHealth'])
 
 /*
 |--------------------------------------------------------------------------
+| System Environment Check Routes
+|--------------------------------------------------------------------------
+*/
+Route::get('/environment', [Admin\SystemEnvironmentController::class, 'index'])->name('admin.environment');
+
+/*
+|--------------------------------------------------------------------------
+| Server Transfer Queue Routes
+|--------------------------------------------------------------------------
+*/
+Route::get('/transfers', [Admin\ServerTransferQueueController::class, 'index'])->name('admin.transfers');
+
+/*
+|--------------------------------------------------------------------------
 | Security Audit Routes
 |--------------------------------------------------------------------------
 */

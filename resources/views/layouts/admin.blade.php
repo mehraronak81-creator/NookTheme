@@ -11,7 +11,7 @@
         <link rel="icon" type="image/png" href="/favicons/favicon-32x32.png" sizes="32x32">
         <link rel="icon" type="image/png" href="/favicons/favicon-16x16.png" sizes="16x16">
         <link rel="manifest" href="/favicons/manifest.json">
-        <link rel="mask-icon" href="/favicons/safari-pinned-tab.svg" color="#6c5ce7">
+        <link rel="mask-icon" href="/favicons/safari-pinned-tab.svg" color="#7382FF">
         <link rel="shortcut icon" href="/favicons/favicon.ico">
         <meta name="msapplication-config" content="/favicons/browserconfig.xml">
         <meta name="theme-color" content="#0a0a10">
@@ -32,9 +32,9 @@
             <style>
                 /* VantaHost Admin Theme Override */
                 :root {
-                    --vh-accent: #6c5ce7;
-                    --vh-accent-hover: #7c6df7;
-                    --vh-accent-glow: rgba(108, 92, 231, 0.3);
+                    --vh-accent: #7382FF;
+                    --vh-accent-hover: #8a96ff;
+                    --vh-accent-glow: rgba(115, 130, 255, 0.3);
                     --vh-bg: #0a0a10;
                     --vh-surface: #12121a;
                     --vh-surface-2: #1a1a28;
@@ -124,7 +124,7 @@
                 }
 
                 .skin-blue .sidebar-menu>li.active>a {
-                    background: rgba(108, 92, 231, 0.08) !important;
+                    background: rgba(115, 130, 255, 0.08) !important;
                     color: var(--vh-accent) !important;
                     border-left-color: var(--vh-accent) !important;
                     font-weight: 600;
@@ -590,12 +590,12 @@
                 }
 
                 [data-theme="light"] .skin-blue .sidebar-menu>li.active>a {
-                    background: rgba(108, 92, 231, 0.06) !important;
-                    color: #6c5ce7 !important;
+                    background: rgba(115, 130, 255, 0.06) !important;
+                    color: #7382FF !important;
                 }
 
                 [data-theme="light"] .skin-blue .sidebar-menu>li.header {
-                    color: #6c5ce7 !important;
+                    color: #7382FF !important;
                 }
 
                 [data-theme="light"] .table>thead>tr>th,
@@ -634,7 +634,7 @@
             <header class="main-header">
                 <a href="{{ route('index') }}" class="logo">
                     <span style="display:flex;align-items:center;justify-content:center;gap:8px;">
-                        <span style="width:26px;height:26px;background:linear-gradient(135deg,#6c5ce7,#a855f7);border-radius:7px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;box-shadow:0 0 12px rgba(108,92,231,0.4);">V</span>
+                        <span style="width:26px;height:26px;background:linear-gradient(135deg,#7382FF,#a78bfa);border-radius:7px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;box-shadow:0 0 12px rgba(115,130,255,0.4);">V</span>
                         VantaHost
                     </span>
                 </a>
@@ -794,6 +794,18 @@
                                         <small class="label pull-right" style="background:var(--vh-danger);">{{ $banCount }}</small>
                                     </span>
                                 @endif
+                            </a>
+                        </li>
+
+                        <li class="header">OPERATIONS</li>
+                        <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.transfers') ?: 'active' }}">
+                            <a href="{{ route('admin.transfers') }}">
+                                <i class="fa fa-exchange"></i> <span>Transfer Queue</span>
+                            </a>
+                        </li>
+                        <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.environment') ?: 'active' }}">
+                            <a href="{{ route('admin.environment') }}">
+                                <i class="fa fa-stethoscope"></i> <span>System Environment</span>
                             </a>
                         </li>
 

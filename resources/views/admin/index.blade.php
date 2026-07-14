@@ -39,7 +39,7 @@
 {{-- Quick Stats Cards --}}
 <div class="row" id="system-health">
     <div class="col-lg-3 col-xs-6">
-        <div class="small-box" style="background:linear-gradient(135deg,#6c5ce7,#a855f7);border-radius:12px;">
+        <div class="small-box" style="background:linear-gradient(135deg,#7382FF,#a78bfa);border-radius:12px;">
             <div class="inner">
                 <h3 id="stat-servers">{{ $servers }}</h3>
                 <p>Total Servers</p>
@@ -146,7 +146,7 @@
             </div>
             <div class="box-body">
                 <div style="background:var(--vh-surface,#12121a);border-radius:8px;overflow:hidden;height:28px;margin-bottom:10px;">
-                    <div id="mem-bar" style="height:100%;background:linear-gradient(90deg,#6c5ce7,#a855f7);border-radius:8px;transition:width 0.6s ease;width:{{ $totalMemory > 0 ? round(($allocatedMemory / $totalMemory) * 100, 1) : 0 }}%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:600;">
+                    <div id="mem-bar" style="height:100%;background:linear-gradient(90deg,#7382FF,#a78bfa);border-radius:8px;transition:width 0.6s ease;width:{{ $totalMemory > 0 ? round(($allocatedMemory / $totalMemory) * 100, 1) : 0 }}%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:600;">
                         {{ $totalMemory > 0 ? round(($allocatedMemory / $totalMemory) * 100, 1) : 0 }}%
                     </div>
                 </div>
@@ -219,7 +219,7 @@
                                         <span>{{ number_format($node['memory_used']) }} / {{ number_format($node['memory']) }} MiB ({{ $node['memory_percent'] }}%)</span>
                                     </div>
                                     <div style="background:var(--vh-surface-2,#1a1a28);border-radius:4px;overflow:hidden;height:6px;">
-                                        <div style="height:100%;border-radius:4px;transition:width 0.6s ease;width:{{ $node['memory_percent'] }}%;background:{{ $node['memory_percent'] > 90 ? '#ff4757' : ($node['memory_percent'] > 70 ? '#ffa502' : '#6c5ce7') }};"></div>
+                                        <div style="height:100%;border-radius:4px;transition:width 0.6s ease;width:{{ $node['memory_percent'] }}%;background:{{ $node['memory_percent'] > 90 ? '#ff4757' : ($node['memory_percent'] > 70 ? '#ffa502' : '#7382FF') }};"></div>
                                     </div>
                                 </div>
                                 {{-- Disk bar --}}
