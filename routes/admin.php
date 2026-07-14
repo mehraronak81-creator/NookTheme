@@ -9,6 +9,96 @@ Route::get('/system-health/json', [Admin\BaseController::class, 'systemHealth'])
 
 /*
 |--------------------------------------------------------------------------
+| Security Audit Routes
+|--------------------------------------------------------------------------
+*/
+Route::group(['prefix' => 'security'], function () {
+    Route::get('/', [Admin\SecurityAuditController::class, 'index'])->name('admin.security');
+    Route::delete('/session/{sessionId}', [Admin\SecurityAuditController::class, 'destroySession'])->name('admin.security.session.destroy');
+    Route::delete('/api-key/{id}', [Admin\SecurityAuditController::class, 'revokeApiKey'])->name('admin.security.api-key.revoke');
+});
+
+/*
+|--------------------------------------------------------------------------
+| IP Ban Routes
+|--------------------------------------------------------------------------
+*/
+Route::group(['prefix' => 'security/ip-ban'], function () {
+    Route::get('/', [Admin\IpBanController::class, 'index'])->name('admin.security.ip-ban');
+    Route::post('/', [Admin\IpBanController::class, 'store'])->name('admin.security.ip-ban.store');
+    Route::delete('/{ip}', [Admin\IpBanController::class, 'destroy'])->where('ip', '[0-9.:a-fA-F]+')->name('admin.security.ip-ban.destroy');
+    Route::post('/clear-auto', [Admin\IpBanController::class, 'clearAutoBlocked'])->name('admin.security.ip-ban.clear-auto');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Announcements Routes
+|--------------------------------------------------------------------------
+*/
+Route::group(['prefix' => 'announcements'], function () {
+    Route::get('/', [Admin\AnnouncementController::class, 'index'])->name('admin.announcements');
+    Route::post('/', [Admin\AnnouncementController::class, 'store'])->name('admin.announcements.store');
+    Route::post('/toggle/{id}', [Admin\AnnouncementController::class, 'toggle'])->name('admin.announcements.toggle');
+    Route::delete('/{id}', [Admin\AnnouncementController::class, 'destroy'])->name('admin.announcements.destroy');
+    Route::get('/active', [Admin\AnnouncementController::class, 'active'])->name('admin.announcements.active');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Server Analytics Routes
+|--------------------------------------------------------------------------
+*/
+Route::group(['prefix' => 'analytics'], function () {
+    Route::get('/', [Admin\ServerAnalyticsController::class, 'index'])->name('admin.analytics');
+    Route::get('/chart-data', [Admin\ServerAnalyticsController::class, 'chartData'])->name('admin.analytics.chart-data');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Resource Monitor Routes
+|--------------------------------------------------------------------------
+*/
+Route::group(['prefix' => 'resources'], function () {
+    Route::get('/', [Admin\ResourceMonitorController::class, 'index'])->name('admin.resources');
+    Route::get('/live', [Admin\ResourceMonitorController::class, 'liveData'])->name('admin.resources.live');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Webhook Routes
+|--------------------------------------------------------------------------
+*/
+Route::group(['prefix' => 'webhooks'], function () {
+    Route::get('/', [Admin\WebhookController::class, 'index'])->name('admin.webhooks');
+    Route::post('/', [Admin\WebhookController::class, 'store'])->name('admin.webhooks.store');
+    Route::post('/toggle/{id}', [Admin\WebhookController::class, 'toggle'])->name('admin.webhooks.toggle');
+    Route::post('/test/{id}', [Admin\WebhookController::class, 'test'])->name('admin.webhooks.test');
+    Route::delete('/{id}', [Admin\WebhookController::class, 'destroy'])->name('admin.webhooks.destroy');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Backup Manager Routes
+|--------------------------------------------------------------------------
+*/
+Route::group(['prefix' => 'backup-manager'], function () {
+    Route::get('/', [Admin\BackupManagerController::class, 'index'])->name('admin.backup-manager');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Admin Notes Routes
+|--------------------------------------------------------------------------
+*/
+Route::group(['prefix' => 'notes'], function () {
+    Route::get('/', [Admin\AdminNotesController::class, 'index'])->name('admin.notes');
+    Route::post('/', [Admin\AdminNotesController::class, 'store'])->name('admin.notes.store');
+    Route::post('/toggle/{id}', [Admin\AdminNotesController::class, 'toggle'])->name('admin.notes.toggle');
+    Route::delete('/{id}', [Admin\AdminNotesController::class, 'destroy'])->name('admin.notes.destroy');
+});
+
+/*
+|--------------------------------------------------------------------------
 | System Health Monitor Routes
 |--------------------------------------------------------------------------
 */

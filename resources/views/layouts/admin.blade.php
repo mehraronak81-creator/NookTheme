@@ -761,10 +761,61 @@
                                 <i class="fa fa-history"></i> <span>Activity Log</span>
                             </a>
                         </li>
-                        <li class="header">SYSTEM HEALTH</li>
+                        <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.announcements') ?: 'active' }}">
+                            <a href="{{ route('admin.announcements') }}">
+                                <i class="fa fa-bullhorn"></i> <span>Announcements</span>
+                            </a>
+                        </li>
+                        <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.notes') ?: 'active' }}">
+                            <a href="{{ route('admin.notes') }}">
+                                <i class="fa fa-sticky-note"></i> <span>Admin Notes</span>
+                            </a>
+                        </li>
+                        <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.webhooks') ?: 'active' }}">
+                            <a href="{{ route('admin.webhooks') }}">
+                                <i class="fa fa-plug"></i> <span>Webhooks</span>
+                            </a>
+                        </li>
+
+                        <li class="header">SECURITY CENTER</li>
+                        <li class="{{ Route::currentRouteName() === 'admin.security' ? 'active' : '' }}">
+                            <a href="{{ route('admin.security') }}">
+                                <i class="fa fa-shield"></i> <span>Security Audit</span>
+                            </a>
+                        </li>
+                        <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.security.ip-ban') ?: 'active' }}">
+                            <a href="{{ route('admin.security.ip-ban') }}">
+                                <i class="fa fa-ban"></i> <span>IP Ban Manager</span>
+                                @php
+                                    $banCount = count(\Illuminate\Support\Facades\Cache::get('admin_banned_ips', [])) + count(\Illuminate\Support\Facades\Cache::get('admin_auto_blocked_ips', []));
+                                @endphp
+                                @if($banCount > 0)
+                                    <span class="pull-right-container">
+                                        <small class="label pull-right" style="background:var(--vh-danger);">{{ $banCount }}</small>
+                                    </span>
+                                @endif
+                            </a>
+                        </li>
+
+                        <li class="header">MONITORING & ANALYTICS</li>
                         <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.health') ?: 'active' }}">
                             <a href="{{ route('admin.health') }}">
                                 <i class="fa fa-heartbeat"></i> <span>Health Monitor</span>
+                            </a>
+                        </li>
+                        <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.resources') ?: 'active' }}">
+                            <a href="{{ route('admin.resources') }}">
+                                <i class="fa fa-tachometer"></i> <span>Resource Monitor</span>
+                            </a>
+                        </li>
+                        <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.analytics') ?: 'active' }}">
+                            <a href="{{ route('admin.analytics') }}">
+                                <i class="fa fa-line-chart"></i> <span>Server Analytics</span>
+                            </a>
+                        </li>
+                        <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.backup-manager') ?: 'active' }}">
+                            <a href="{{ route('admin.backup-manager') }}">
+                                <i class="fa fa-cloud-download"></i> <span>Backup Manager</span>
                             </a>
                         </li>
                         <li>

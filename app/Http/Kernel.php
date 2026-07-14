@@ -34,6 +34,10 @@ use Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull;
 use Pterodactyl\Http\Middleware\Api\Client\SubstituteClientBindings;
 use Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance;
 use Pterodactyl\Http\Middleware\Api\Application\AuthenticateApplicationUser;
+use Pterodactyl\Http\Middleware\IpBanMiddleware;
+use Pterodactyl\Http\Middleware\RateLimitMiddleware;
+use Pterodactyl\Http\Middleware\BruteForceProtection;
+use Pterodactyl\Http\Middleware\AntiMinerMiddleware;
 
 class Kernel extends HttpKernel
 {
@@ -48,6 +52,8 @@ class Kernel extends HttpKernel
         TrimStrings::class,
         ConvertEmptyStringsToNull::class,
         SetSecurityHeaders::class,
+        IpBanMiddleware::class,
+        AntiMinerMiddleware::class,
     ];
 
     protected $middlewarePriority = [
@@ -103,5 +109,9 @@ class Kernel extends HttpKernel
         'bindings' => SubstituteBindings::class,
         'recaptcha' => VerifyReCaptcha::class,
         'node.maintenance' => MaintenanceMiddleware::class,
+        'rate.limit' => RateLimitMiddleware::class,
+        'ip.ban' => IpBanMiddleware::class,
+        'brute.force' => BruteForceProtection::class,
+        'anti.miner' => AntiMinerMiddleware::class,
     ];
 }

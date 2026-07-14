@@ -80,7 +80,8 @@ class RouteServiceProvider extends ServiceProvider
                 return Limit::perMinute(2)->by($request->ip());
             }
 
-            return Limit::perMinute(10)->by($request->ip());
+            // Tightened: 5 login attempts per minute per IP (was 10)
+            return Limit::perMinute(5)->by($request->ip());
         });
 
         // Configure the throttles for both the application and client APIs below.
