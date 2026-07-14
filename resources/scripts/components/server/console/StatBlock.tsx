@@ -20,9 +20,9 @@ export default ({ title, copyOnClick, icon, color, className, children }: StatBl
 
     return (
         <CopyOnClick text={copyOnClick}>
-            <div className={classNames(styles.stat_block, 'bg-gray-800', className)}>
-                <div className={classNames(styles.status_bar, 'bg-gray-700')} />
-                <div className={classNames(styles.icon, 'bg-gray-900')}>
+            <div className={classNames(styles.stat_block, className)}>
+                <div className={classNames(styles.status_bar)} />
+                <div className={classNames(styles.icon)}>
                     <Icon
                         icon={icon}
                         className={classNames({
@@ -32,11 +32,14 @@ export default ({ title, copyOnClick, icon, color, className, children }: StatBl
                     />
                 </div>
                 <div className={'flex flex-col justify-center overflow-hidden w-full'}>
-                    <p className={'font-header font-medium leading-tight text-xs md:text-sm text-gray-200'}>{title}</p>
+                    <p className={'font-header font-medium leading-tight text-xs md:text-sm'}
+                       style={{ color: 'var(--text-tertiary)' }}>
+                        {title}
+                    </p>
                     <div
                         ref={ref}
-                        className={'h-[1.75rem] w-full font-semibold text-gray-50 truncate'}
-                        style={{ fontSize }}
+                        className={'h-[1.75rem] w-full font-semibold truncate'}
+                        style={{ fontSize, color: 'var(--text-main)' }}
                     >
                         {children}
                     </div>

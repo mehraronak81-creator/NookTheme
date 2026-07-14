@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faCogs, faLayerGroup, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faCogs, faLayerGroup, faSignOutAlt, faMoon, faSun } from '@fortawesome/free-solid-svg-icons';
 import { useStoreState } from 'easy-peasy';
 import { ApplicationStore } from '@/state';
 import SearchContainer from '@/components/dashboard/search/SearchContainer';
@@ -17,17 +17,19 @@ const RightNavigation = styled.div`
     & > a,
     & > button,
     & > .navigation-link {
-        ${tw`flex items-center h-full no-underline text-neutral-300 px-6 cursor-pointer transition-all duration-150`};
+        ${tw`flex items-center h-full no-underline px-6 cursor-pointer transition-all duration-150`};
+        color: var(--text-secondary);
 
         &:active,
         &:hover {
-            ${tw`text-neutral-100 bg-black`};
+            color: var(--text-main);
+            background: var(--color-surface-hover);
         }
 
         &:active,
         &:hover,
         &.active {
-            box-shadow: inset 0 -2px ${theme`colors.cyan.600`.toString()};
+            box-shadow: inset 0 -2px var(--color-accent);
         }
     }
 `;
@@ -40,12 +42,29 @@ const onTriggerNavButton = () => {
     }
 };
 
+const getTheme = (): string => {
+    if (typeof window !== 'undefined') {
+        return localStorage.getItem('vantahost-theme') || 'dark';
+    }
+    return 'dark';
+};
+
 export default () => {
     const name = useStoreState((state: ApplicationStore) => state.settings.data!.name);
     const rootAdmin = useStoreState((state: ApplicationStore) => state.user.data!.rootAdmin);
     const [isLoggingOut, setIsLoggingOut] = useState(false);
     const location = useLocation();
     const [showSidebar, setShowSidebar] = useState(false);
+    const [currentTheme, setCurrentTheme] = useState(getTheme);
+
+    useEffect(() => {
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        localStorage.setItem('vantahost-theme', currentTheme);
+    }, [currentTheme]);
+
+    const toggleTheme = useCallback(() => {
+        setCurrentTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+    }, []);
 
     useEffect(() => {
         if (location.pathname.startsWith('/server') || location.pathname.startsWith('/account')) {
@@ -64,7 +83,7 @@ export default () => {
     };
 
     return (
-        <div className={'bg-neutral-700 shadow-md overflow-x-auto topbar'}>
+        <div className={'shadow-md overflow-x-auto topbar'}>
             <SpinnerOverlay visible={isLoggingOut} />
             <div className={'mx-auto w-full flex items-center h-[3.5rem] max-w-[1200px]'}>
                 {showSidebar && (
@@ -79,9 +98,11 @@ export default () => {
                     <Link
                         to={'/'}
                         className={
-                            'text-2xl font-header font-medium px-4 no-underline text-neutral-200 hover:text-neutral-100 transition-colors duration-150'
+                            'text-2xl font-header font-medium px-4 no-underline transition-colors duration-150 flex items-center gap-2'
                         }
+                        style={{ color: 'var(--text-main)' }}
                     >
+                        <span className='vanta-brand-icon'>V</span>
                         {name}
                     </Link>
                 </div>
@@ -106,6 +127,11 @@ export default () => {
                                 <Avatar.User />
                             </span>
                         </NavLink>
+                    </Tooltip>
+                    <Tooltip placement={'bottom'} content={currentTheme === 'dark' ? 'Light Mode' : 'Dark Mode'}>
+                        <button onClick={toggleTheme} className='theme-toggle'>
+                            <FontAwesomeIcon icon={currentTheme === 'dark' ? faSun : faMoon} />
+                        </button>
                     </Tooltip>
                     <Tooltip placement={'bottom'} content={'Sign Out'}>
                         <button onClick={onTriggerLogout}>

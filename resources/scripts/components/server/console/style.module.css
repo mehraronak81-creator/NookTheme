@@ -1,20 +1,39 @@
 .stat_block {
-    @apply flex items-center rounded shadow-lg relative;
+    @apply flex items-center rounded-xl relative;
     @apply col-span-3 md:col-span-2 lg:col-span-6;
     @apply px-3 py-2 md:p-3 lg:p-4;
+    background: var(--card-bg, #1a1a28);
+    border: 1px solid var(--color-border, #2a2a3a);
+    box-shadow: var(--shadow-sm, 0 1px 3px rgba(0,0,0,0.4));
+    transition: all 0.2s ease;
+
+    &:hover {
+        border-color: var(--color-accent, #6c5ce7);
+        box-shadow: var(--shadow-glow, 0 0 20px rgba(108,92,231,0.3));
+        transform: translateY(-1px);
+    }
 
     & > .status_bar {
-        @apply w-1 h-full absolute left-0 top-0 rounded-l sm:hidden;
+        @apply w-1 h-full absolute left-0 top-0 rounded-l-xl sm:hidden;
+        background: var(--color-accent, #6c5ce7);
     }
 
     & > .icon {
-        @apply hidden flex-shrink-0 items-center justify-center rounded-lg shadow-md w-12 h-12;
-        @apply transition-colors duration-500;
+        @apply hidden flex-shrink-0 items-center justify-center rounded-lg w-12 h-12;
+        @apply transition-all duration-300;
         @apply sm:flex sm:mr-4;
+        background: var(--color-surface, #1e1e2a);
+        box-shadow: var(--shadow-sm, 0 1px 3px rgba(0,0,0,0.3));
 
         & > svg {
-            @apply w-6 h-6 m-auto;
+            @apply w-5 h-5 m-auto;
         }
+    }
+
+    &:hover > .icon {
+        background: var(--color-accent, #6c5ce7);
+        color: white;
+        box-shadow: var(--shadow-glow, 0 0 20px rgba(108,92,231,0.3));
     }
 }
 
@@ -31,7 +50,10 @@
     }
 
     & > .container {
-        @apply rounded-t p-1 sm:p-2 bg-black min-h-[16rem] flex-1 font-mono text-sm;
+        @apply rounded-t-xl p-1 sm:p-2 min-h-[16rem] flex-1 font-mono text-sm;
+        background: #0a0a12;
+        border: 1px solid var(--color-border, #2a2a3a);
+        border-bottom: none;
 
         & #terminal {
             @apply h-full;
@@ -41,23 +63,48 @@
             }
 
             &::-webkit-scrollbar-thumb {
-                @apply bg-slate-800;
+                background: var(--scrollbar-thumb, #2a2a40);
+                border-radius: 3px;
             }
         }
     }
 
     & .command_icon {
-        @apply flex items-center top-0 left-0 absolute z-10 select-none h-full px-3 transition-colors duration-100;
+        @apply flex items-center top-0 left-0 absolute z-10 select-none h-full px-3;
+        color: var(--color-accent, #6c5ce7);
+        transition: color 0.15s ease;
     }
 
     & .command_input {
-        @apply relative bg-gray-900 px-2 text-gray-100 pl-10 pr-4 py-2 w-full font-mono text-sm sm:rounded-b;
+        @apply relative px-2 pl-10 pr-4 py-3 w-full font-mono text-sm sm:rounded-b-xl;
         @apply focus:ring-0 outline-none focus-visible:outline-none;
-        @apply border-0 border-b-2 border-transparent transition-colors duration-100;
-        @apply active:border-cyan-500 focus:border-cyan-500;
+        @apply border-0 border-b-2 border-transparent transition-all duration-200;
+        background: #0d0d16;
+        color: var(--text-main, #e8e8f0);
+        border-left: 1px solid var(--color-border, #2a2a3a);
+        border-right: 1px solid var(--color-border, #2a2a3a);
+        border-bottom: 2px solid transparent;
+
+        &:focus {
+            border-bottom-color: var(--color-accent, #6c5ce7);
+            box-shadow: 0 4px 12px rgba(108,92,231,0.15);
+        }
+
+        &::placeholder {
+            color: var(--text-muted, #555570);
+        }
     }
 }
 
 .chart_container {
-    @apply rounded shadow-lg pt-2 relative bg-gray-800;
+    @apply rounded-xl pt-2 relative;
+    background: var(--card-bg, #1a1a28);
+    border: 1px solid var(--color-border, #2a2a3a);
+    box-shadow: var(--shadow-sm, 0 1px 3px rgba(0,0,0,0.4));
+    transition: all 0.2s ease;
+
+    &:hover {
+        border-color: var(--color-accent, #6c5ce7);
+        box-shadow: var(--shadow-glow, 0 0 20px rgba(108,92,231,0.15));
+    }
 }

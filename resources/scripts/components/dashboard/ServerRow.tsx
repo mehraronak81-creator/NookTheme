@@ -31,8 +31,9 @@ const StatusIndicatorBox = styled(GreyRowBox)<{ $status: ServerPowerState | unde
     ${tw`grid grid-cols-12 gap-4 relative`};
 
     & .status-bar {
-        ${tw`w-2 bg-red-500 absolute right-0 z-20 rounded-full m-1 opacity-50 transition-all duration-150`};
+        ${tw`w-1.5 absolute right-0 z-20 rounded-full m-1 transition-all duration-300`};
         height: calc(100% - 0.5rem);
+        opacity: 0.7;
 
         ${({ $status }) =>
             !$status || $status === 'offline'
@@ -40,10 +41,17 @@ const StatusIndicatorBox = styled(GreyRowBox)<{ $status: ServerPowerState | unde
                 : $status === 'running'
                 ? tw`bg-green-500`
                 : tw`bg-yellow-500`};
+
+        ${({ $status }) =>
+            $status === 'running'
+                ? `box-shadow: 0 0 8px rgba(46, 213, 115, 0.5);`
+                : $status === 'offline'
+                ? `box-shadow: 0 0 8px rgba(255, 71, 87, 0.3);`
+                : `box-shadow: 0 0 8px rgba(255, 165, 2, 0.3);`};
     }
 
     &:hover .status-bar {
-        ${tw`opacity-75`};
+        opacity: 1;
     }
 `;
 
