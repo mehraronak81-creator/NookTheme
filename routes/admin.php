@@ -5,6 +5,61 @@ use Pterodactyl\Http\Controllers\Admin;
 use Pterodactyl\Http\Middleware\Admin\Servers\ServerInstalled;
 
 Route::get('/', [Admin\BaseController::class, 'index'])->name('admin.index');
+Route::get('/system-health/json', [Admin\BaseController::class, 'systemHealth'])->name('admin.system-health.json');
+
+/*
+|--------------------------------------------------------------------------
+| System Health Monitor Routes
+|--------------------------------------------------------------------------
+*/
+Route::group(['prefix' => 'health'], function () {
+    Route::get('/', [Admin\HealthController::class, 'index'])->name('admin.health');
+    Route::get('/check-node/{node:id}', [Admin\HealthController::class, 'checkNode'])->name('admin.health.check-node');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Trash Bin Routes
+|--------------------------------------------------------------------------
+*/
+Route::group(['prefix' => 'trashbin'], function () {
+    Route::get('/', [Admin\TrashBinController::class, 'index'])->name('admin.trashbin');
+    Route::post('/restore/{server:id}', [Admin\TrashBinController::class, 'restore'])->name('admin.trashbin.restore');
+    Route::post('/bulk-restore', [Admin\TrashBinController::class, 'bulkRestore'])->name('admin.trashbin.bulk-restore');
+    Route::delete('/destroy/{server:id}', [Admin\TrashBinController::class, 'destroy'])->name('admin.trashbin.destroy');
+    Route::post('/empty', [Admin\TrashBinController::class, 'emptyTrash'])->name('admin.trashbin.empty');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Bulk Actions Routes
+|--------------------------------------------------------------------------
+*/
+Route::group(['prefix' => 'bulk-actions'], function () {
+    Route::get('/', [Admin\BulkActionsController::class, 'index'])->name('admin.bulk-actions');
+    Route::post('/execute', [Admin\BulkActionsController::class, 'execute'])->name('admin.bulk-actions.execute');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Activity Log Routes
+|--------------------------------------------------------------------------
+*/
+Route::group(['prefix' => 'activity'], function () {
+    Route::get('/', [Admin\ActivityController::class, 'index'])->name('admin.activity');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Maintenance Mode Routes
+|--------------------------------------------------------------------------
+*/
+Route::group(['prefix' => 'maintenance'], function () {
+    Route::get('/', [Admin\MaintenanceController::class, 'index'])->name('admin.maintenance');
+    Route::post('/toggle/{node:id}', [Admin\MaintenanceController::class, 'toggle'])->name('admin.maintenance.toggle');
+    Route::post('/enable-all', [Admin\MaintenanceController::class, 'enableAll'])->name('admin.maintenance.enable-all');
+    Route::post('/disable-all', [Admin\MaintenanceController::class, 'disableAll'])->name('admin.maintenance.disable-all');
+});
 
 /*
 |--------------------------------------------------------------------------

@@ -724,9 +724,46 @@
                                 <i class="fa fa-th-large"></i> <span>Nests</span>
                             </a>
                         </li>
+                        <li class="header">ADMIN TOOLS</li>
+                        <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.bulk-actions') ?: 'active' }}">
+                            <a href="{{ route('admin.bulk-actions') }}">
+                                <i class="fa fa-tasks"></i> <span>Bulk Actions</span>
+                            </a>
+                        </li>
+                        <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.trashbin') ?: 'active' }}">
+                            <a href="{{ route('admin.trashbin') }}">
+                                <i class="fa fa-trash"></i> <span>Trash Bin</span>
+                                @php
+                                    $trashCount = \Pterodactyl\Models\Server::where('status', \Pterodactyl\Models\Server::STATUS_SUSPENDED)->count();
+                                @endphp
+                                @if($trashCount > 0)
+                                    <span class="pull-right-container">
+                                        <small class="label pull-right" style="background:var(--vh-danger);">{{ $trashCount }}</small>
+                                    </span>
+                                @endif
+                            </a>
+                        </li>
+                        <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.maintenance') ?: 'active' }}">
+                            <a href="{{ route('admin.maintenance') }}">
+                                <i class="fa fa-wrench"></i> <span>Maintenance</span>
+                                @php
+                                    $maintCount = \Pterodactyl\Models\Node::where('maintenance_mode', true)->count();
+                                @endphp
+                                @if($maintCount > 0)
+                                    <span class="pull-right-container">
+                                        <small class="label pull-right" style="background:var(--vh-warning);">{{ $maintCount }}</small>
+                                    </span>
+                                @endif
+                            </a>
+                        </li>
+                        <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.activity') ?: 'active' }}">
+                            <a href="{{ route('admin.activity') }}">
+                                <i class="fa fa-history"></i> <span>Activity Log</span>
+                            </a>
+                        </li>
                         <li class="header">SYSTEM HEALTH</li>
-                        <li>
-                            <a href="{{ route('admin.index') }}#system-health">
+                        <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.health') ?: 'active' }}">
+                            <a href="{{ route('admin.health') }}">
                                 <i class="fa fa-heartbeat"></i> <span>Health Monitor</span>
                             </a>
                         </li>
