@@ -283,6 +283,111 @@
     </div>
 </div>
 
+{{-- All Servers (every user) --}}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title"><i class="fa fa-server" style="margin-right:8px;color:var(--vh-accent,#6c5ce7);"></i>All Servers <small>across every user</small></h3>
+                <div class="box-tools pull-right">
+                    <input type="text" id="server-search" class="form-control input-sm" placeholder="Search name, owner, node..." style="width:220px;display:inline-block;margin-right:8px;">
+                    <a href="{{ route('admin.servers') }}" class="btn btn-sm btn-primary">Full Server List</a>
+                </div>
+            </div>
+            <div class="box-body table-responsive no-padding">
+                <table class="table table-hover" id="all-servers-table">
+                    <thead>
+                        <tr>
+                            <th>Server</th>
+                            <th>Owner</th>
+                            <th>Node</th>
+                            <th>Connection</th>
+                            <th>Status</th>
+                            <th class="text-center">Quick Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($allServers as $srv)
+                        <tr class="server-row" data-search="{{ strtolower($srv->name . ' ' . ($srv->user->username ?? '') . ' ' . ($srv->user->email ?? '') . ' ' . ($srv->node->name ?? '')) }}">
+                            <td>
+                                <a href="{{ route('admin.servers.view', $srv->id) }}"><strong>{{ $srv->name }}</strong></a>
+                                <br><span style="color:var(--vh-text-muted);font-size:11px;">{{ $srv->uuidShort }}</span>
+                            </td>
+                            <td>
+                                @if($srv->user)
+                                    <a href="{{ route('admin.users.view', $srv->user->id) }}" title="View owner">
+                                        <i class="fa fa-user" style="margin-right:4px;"></i>{{ $srv->user->username }}
+                                    </a>
+                                @else
+                                    <span style="color:var(--vh-text-muted);">Unknown</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if($srv->node)
+                                    <a href="{{ route('admin.nodes.view', $srv->node->id) }}">{{ $srv->node->name }}</a>
+                                @endif
+                            </td>
+                            <td>
+                                @if($srv->allocation)
+                                    <code style="font-size:11px;">{{ $srv->allocation->alias ?? $srv->allocation->ip }}:{{ $srv->allocation->port }}</code>
+                                @endif
+                            </td>
+                            <td>
+                                @if($srv->isSuspended())
+                                    <span class="label label-danger">Suspended</span>
+                                @elseif($srv->status === 'installing')
+                                    <span class="label label-warning">Installing</span>
+                                @elseif(in_array($srv->status, ['install_failed', 'reinstall_failed']))
+                                    <span class="label label-danger">Install Failed</span>
+                                @elseif($srv->status === 'restoring_backup')
+                                    <span class="label label-info">Restoring</span>
+                                @else
+                                    <span class="label label-success">Active</span>
+                                @endif
+                            </td>
+                            <td class="text-center" style="white-space:nowrap;">
+                                <a href="/server/{{ $srv->uuidShort }}" target="_blank" class="btn btn-xs btn-primary" title="Open console as admin">
+                                    <i class="fa fa-terminal"></i>
+                                </a>
+                                <a href="{{ route('admin.servers.view.manage', $srv->id) }}" class="btn btn-xs btn-default" title="Manage server">
+                                    <i class="fa fa-wrench"></i>
+                                </a>
+                                @if($srv->isSuspended())
+                                    <form action="{{ route('admin.servers.view.manage.suspension', $srv->id) }}" method="POST" style="display:inline;">
+                                        {!! csrf_field() !!}
+                                        <input type="hidden" name="action" value="unsuspend">
+                                        <button type="submit" class="btn btn-xs btn-success" title="Unsuspend server">
+                                            <i class="fa fa-play-circle"></i>
+                                        </button>
+                                    </form>
+                                @else
+                                    <form action="{{ route('admin.servers.view.manage.suspension', $srv->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Suspend “{{ $srv->name }}”? The owner will lose access until unsuspended.');">
+                                        {!! csrf_field() !!}
+                                        <input type="hidden" name="action" value="suspend">
+                                        <button type="submit" class="btn btn-xs btn-danger" title="Suspend server">
+                                            <i class="fa fa-ban"></i>
+                                        </button>
+                                    </form>
+                                @endif
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="6" style="text-align:center;color:var(--vh-text-muted);padding:20px;">No servers created yet.</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+            @if($allServers->count() >= 50)
+                <div class="box-footer" style="text-align:center;">
+                    Showing the 50 most recent servers — <a href="{{ route('admin.servers') }}">view the full list</a>.
+                </div>
+            @endif
+        </div>
+    </div>
+</div>
+
 {{-- Admin Operations Panel --}}
 <div class="row">
     <div class="col-md-6">
@@ -476,6 +581,14 @@
     $(document).ready(function() {
         refreshDashboardStats();
         setInterval(refreshDashboardStats, 30000);
+
+        // Live filter for the all-servers table
+        $('#server-search').on('input', function() {
+            var query = $(this).val().toLowerCase().trim();
+            $('#all-servers-table .server-row').each(function() {
+                $(this).toggle(!query || $(this).data('search').indexOf(query) !== -1);
+            });
+        });
     });
     </script>
 @endsection

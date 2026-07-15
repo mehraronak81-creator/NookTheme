@@ -84,6 +84,12 @@ class BaseController extends Controller
                 ];
             });
 
+        // All servers across every user, for the homepage server list.
+        $allServers = Server::with(['user', 'node', 'allocation'])
+            ->orderBy('created_at', 'desc')
+            ->limit(50)
+            ->get();
+
         return view('admin.index', [
             'version' => $this->version,
             'servers' => $servers,
@@ -105,6 +111,7 @@ class BaseController extends Controller
             'nodesInMaintenance' => $nodesInMaintenance,
             'recentActivity' => $recentActivity,
             'nodeStats' => $nodeStats,
+            'allServers' => $allServers,
         ]);
     }
 
