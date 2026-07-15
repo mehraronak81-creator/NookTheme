@@ -36,15 +36,15 @@ Dark & Light mode with glassmorphism, ambient glow & smooth transitions
     --invert: 1000;
     --sidebar-button-color: #d0d0e0;
     --sidebar-button-color-hover: #7382FF;
-    --card-bg: rgba(26, 26, 40, 0.75);
+    --card-bg: rgba(26, 26, 40, 0.55);
     --card-bg-solid: #1a1a28;
-    --card-bg-hover: rgba(34, 34, 53, 0.85);
+    --card-bg-hover: rgba(34, 34, 53, 0.65);
     --gradient-accent: linear-gradient(135deg, #7382FF 0%, #a78bfa 100%);
     --gradient-accent-subtle: linear-gradient(135deg, rgba(115,130,255,0.15) 0%, rgba(167,139,250,0.08) 100%);
     --gradient-surface: linear-gradient(180deg, rgba(26,26,40,0.92) 0%, rgba(18,18,26,0.96) 100%);
     --gradient-border: linear-gradient(135deg, rgba(115,130,255,0.5), rgba(167,139,250,0.2), transparent);
-    --glass-bg: rgba(26, 26, 40, 0.6);
-    --glass-border: rgba(115, 130, 255, 0.08);
+    --glass-bg: rgba(26, 26, 40, 0.45);
+    --glass-border: rgba(115, 130, 255, 0.14);
     --glass-blur: 16px;
     --shadow-sm: 0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
     --shadow-md: 0 4px 12px rgba(0,0,0,0.5), 0 2px 4px rgba(0,0,0,0.35);
@@ -59,8 +59,9 @@ Dark & Light mode with glassmorphism, ambient glow & smooth transitions
     --scrollbar-track: transparent;
     --transition-speed: 0.25s;
     --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
-    --ambient-glow-1: rgba(115, 130, 255, 0.07);
-    --ambient-glow-2: rgba(167, 139, 250, 0.05);
+    --ambient-glow-1: rgba(115, 130, 255, 0.22);
+    --ambient-glow-2: rgba(167, 139, 250, 0.16);
+    --ambient-glow-3: rgba(56, 189, 248, 0.1);
 }
 
 [data-theme="light"] {
@@ -117,15 +118,18 @@ Dark & Light mode with glassmorphism, ambient glow & smooth transitions
     --scrollbar-track: transparent;
     --transition-speed: 0.25s;
     --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
-    --ambient-glow-1: rgba(98, 112, 230, 0.06);
-    --ambient-glow-2: rgba(139, 92, 246, 0.04);
+    --ambient-glow-1: rgba(98, 112, 230, 0.14);
+    --ambient-glow-2: rgba(139, 92, 246, 0.1);
+    --ambient-glow-3: rgba(14, 165, 233, 0.07);
 }
 
 /* ========== AMBIENT BACKGROUND GLOW ========== */
 body {
     background-image:
-        radial-gradient(ellipse 80% 50% at 20% -10%, var(--ambient-glow-1), transparent 60%),
-        radial-gradient(ellipse 60% 40% at 85% 10%, var(--ambient-glow-2), transparent 55%);
+        radial-gradient(ellipse 70% 55% at 15% -5%, var(--ambient-glow-1), transparent 55%),
+        radial-gradient(ellipse 55% 45% at 90% 15%, var(--ambient-glow-2), transparent 55%),
+        radial-gradient(ellipse 65% 50% at 50% 110%, var(--ambient-glow-3), transparent 60%),
+        radial-gradient(ellipse 40% 35% at 70% 60%, var(--ambient-glow-2), transparent 65%);
     background-attachment: fixed;
     background-repeat: no-repeat;
 }
