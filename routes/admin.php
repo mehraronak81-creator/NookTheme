@@ -1,0 +1,387 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use Pterodactyl\Http\Controllers\Admin;
+use Pterodactyl\Http\Middleware\Admin\Servers\ServerInstalled;
+
+Route::get('/', [Admin\BaseController::class, 'index'])->name('admin.index');
+Route::get('/system-health/json', [Admin\BaseController::class, 'systemHealth'])->name('admin.system-health.json');
+
+/*
+|--------------------------------------------------------------------------
+| System Environment Check Routes
+|--------------------------------------------------------------------------
+*/
+Route::get('/environment', [Admin\SystemEnvironmentController::class, 'index'])->name('admin.environment');
+
+/*
+|--------------------------------------------------------------------------
+| Server Transfer Queue Routes
+|--------------------------------------------------------------------------
+*/
+Route::get('/transfers', [Admin\ServerTransferQueueController::class, 'index'])->name('admin.transfers');
+
+/*
+|--------------------------------------------------------------------------
+| Security Audit Routes
+|--------------------------------------------------------------------------
+*/
+Route::group(['prefix' => 'security'], function () {
+    Route::get('/', [Admin\SecurityAuditController::class, 'index'])->name('admin.security');
+    Route::delete('/session/{sessionId}', [Admin\SecurityAuditController::class, 'destroySession'])->name('admin.security.session.destroy');
+    Route::delete('/api-key/{id}', [Admin\SecurityAuditController::class, 'revokeApiKey'])->name('admin.security.api-key.revoke');
+});
+
+/*
+|--------------------------------------------------------------------------
+| IP Ban Routes
+|--------------------------------------------------------------------------
+*/
+Route::group(['prefix' => 'security/ip-ban'], function () {
+    Route::get('/', [Admin\IpBanController::class, 'index'])->name('admin.security.ip-ban');
+    Route::post('/', [Admin\IpBanController::class, 'store'])->name('admin.security.ip-ban.store');
+    Route::delete('/{ip}', [Admin\IpBanController::class, 'destroy'])->where('ip', '[0-9.:a-fA-F]+')->name('admin.security.ip-ban.destroy');
+    Route::post('/clear-auto', [Admin\IpBanController::class, 'clearAutoBlocked'])->name('admin.security.ip-ban.clear-auto');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Announcements Routes
+|--------------------------------------------------------------------------
+*/
+Route::group(['prefix' => 'announcements'], function () {
+    Route::get('/', [Admin\AnnouncementController::class, 'index'])->name('admin.announcements');
+    Route::post('/', [Admin\AnnouncementController::class, 'store'])->name('admin.announcements.store');
+    Route::post('/toggle/{id}', [Admin\AnnouncementController::class, 'toggle'])->name('admin.announcements.toggle');
+    Route::delete('/{id}', [Admin\AnnouncementController::class, 'destroy'])->name('admin.announcements.destroy');
+    Route::get('/active', [Admin\AnnouncementController::class, 'active'])->name('admin.announcements.active');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Server Analytics Routes
+|--------------------------------------------------------------------------
+*/
+Route::group(['prefix' => 'analytics'], function () {
+    Route::get('/', [Admin\ServerAnalyticsController::class, 'index'])->name('admin.analytics');
+    Route::get('/chart-data', [Admin\ServerAnalyticsController::class, 'chartData'])->name('admin.analytics.chart-data');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Resource Monitor Routes
+|--------------------------------------------------------------------------
+*/
+Route::group(['prefix' => 'resources'], function () {
+    Route::get('/', [Admin\ResourceMonitorController::class, 'index'])->name('admin.resources');
+    Route::get('/live', [Admin\ResourceMonitorController::class, 'liveData'])->name('admin.resources.live');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Webhook Routes
+|--------------------------------------------------------------------------
+*/
+Route::group(['prefix' => 'webhooks'], function () {
+    Route::get('/', [Admin\WebhookController::class, 'index'])->name('admin.webhooks');
+    Route::post('/', [Admin\WebhookController::class, 'store'])->name('admin.webhooks.store');
+    Route::post('/toggle/{id}', [Admin\WebhookController::class, 'toggle'])->name('admin.webhooks.toggle');
+    Route::post('/test/{id}', [Admin\WebhookController::class, 'test'])->name('admin.webhooks.test');
+    Route::delete('/{id}', [Admin\WebhookController::class, 'destroy'])->name('admin.webhooks.destroy');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Backup Manager Routes
+|--------------------------------------------------------------------------
+*/
+Route::group(['prefix' => 'backup-manager'], function () {
+    Route::get('/', [Admin\BackupManagerController::class, 'index'])->name('admin.backup-manager');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Admin Notes Routes
+|--------------------------------------------------------------------------
+*/
+Route::group(['prefix' => 'notes'], function () {
+    Route::get('/', [Admin\AdminNotesController::class, 'index'])->name('admin.notes');
+    Route::post('/', [Admin\AdminNotesController::class, 'store'])->name('admin.notes.store');
+    Route::post('/toggle/{id}', [Admin\AdminNotesController::class, 'toggle'])->name('admin.notes.toggle');
+    Route::delete('/{id}', [Admin\AdminNotesController::class, 'destroy'])->name('admin.notes.destroy');
+});
+
+/*
+|--------------------------------------------------------------------------
+| System Health Monitor Routes
+|--------------------------------------------------------------------------
+*/
+Route::group(['prefix' => 'health'], function () {
+    Route::get('/', [Admin\HealthController::class, 'index'])->name('admin.health');
+    Route::get('/check-node/{node:id}', [Admin\HealthController::class, 'checkNode'])->name('admin.health.check-node');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Trash Bin Routes
+|--------------------------------------------------------------------------
+*/
+Route::group(['prefix' => 'trashbin'], function () {
+    Route::get('/', [Admin\TrashBinController::class, 'index'])->name('admin.trashbin');
+    Route::post('/restore/{server:id}', [Admin\TrashBinController::class, 'restore'])->name('admin.trashbin.restore');
+    Route::post('/bulk-restore', [Admin\TrashBinController::class, 'bulkRestore'])->name('admin.trashbin.bulk-restore');
+    Route::delete('/destroy/{server:id}', [Admin\TrashBinController::class, 'destroy'])->name('admin.trashbin.destroy');
+    Route::post('/empty', [Admin\TrashBinController::class, 'emptyTrash'])->name('admin.trashbin.empty');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Bulk Actions Routes
+|--------------------------------------------------------------------------
+*/
+Route::group(['prefix' => 'bulk-actions'], function () {
+    Route::get('/', [Admin\BulkActionsController::class, 'index'])->name('admin.bulk-actions');
+    Route::post('/execute', [Admin\BulkActionsController::class, 'execute'])->name('admin.bulk-actions.execute');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Activity Log Routes
+|--------------------------------------------------------------------------
+*/
+Route::group(['prefix' => 'activity'], function () {
+    Route::get('/', [Admin\ActivityController::class, 'index'])->name('admin.activity');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Maintenance Mode Routes
+|--------------------------------------------------------------------------
+*/
+Route::group(['prefix' => 'maintenance'], function () {
+    Route::get('/', [Admin\MaintenanceController::class, 'index'])->name('admin.maintenance');
+    Route::post('/toggle/{node:id}', [Admin\MaintenanceController::class, 'toggle'])->name('admin.maintenance.toggle');
+    Route::post('/enable-all', [Admin\MaintenanceController::class, 'enableAll'])->name('admin.maintenance.enable-all');
+    Route::post('/disable-all', [Admin\MaintenanceController::class, 'disableAll'])->name('admin.maintenance.disable-all');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Location Controller Routes
+|--------------------------------------------------------------------------
+|
+| Endpoint: /admin/api
+|
+*/
+Route::group(['prefix' => 'api'], function () {
+    Route::get('/', [Admin\ApiController::class, 'index'])->name('admin.api.index');
+    Route::get('/new', [Admin\ApiController::class, 'create'])->name('admin.api.new');
+
+    Route::post('/new', [Admin\ApiController::class, 'store']);
+
+    Route::delete('/revoke/{identifier}', [Admin\ApiController::class, 'delete'])->name('admin.api.delete');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Location Controller Routes
+|--------------------------------------------------------------------------
+|
+| Endpoint: /admin/locations
+|
+*/
+Route::group(['prefix' => 'locations'], function () {
+    Route::get('/', [Admin\LocationController::class, 'index'])->name('admin.locations');
+    Route::get('/view/{location:id}', [Admin\LocationController::class, 'view'])->name('admin.locations.view');
+
+    Route::post('/', [Admin\LocationController::class, 'create']);
+    Route::patch('/view/{location:id}', [Admin\LocationController::class, 'update']);
+});
+
+/*
+|--------------------------------------------------------------------------
+| Database Controller Routes
+|--------------------------------------------------------------------------
+|
+| Endpoint: /admin/databases
+|
+*/
+Route::group(['prefix' => 'databases'], function () {
+    Route::get('/', [Admin\DatabaseController::class, 'index'])->name('admin.databases');
+    Route::get('/view/{host:id}', [Admin\DatabaseController::class, 'view'])->name('admin.databases.view');
+
+    Route::post('/', [Admin\DatabaseController::class, 'create']);
+    Route::patch('/view/{host:id}', [Admin\DatabaseController::class, 'update']);
+    Route::delete('/view/{host:id}', [Admin\DatabaseController::class, 'delete']);
+});
+
+/*
+|--------------------------------------------------------------------------
+| Settings Controller Routes
+|--------------------------------------------------------------------------
+|
+| Endpoint: /admin/settings
+|
+*/
+Route::group(['prefix' => 'settings'], function () {
+    Route::get('/', [Admin\Settings\IndexController::class, 'index'])->name('admin.settings');
+    Route::get('/mail', [Admin\Settings\MailController::class, 'index'])->name('admin.settings.mail');
+    Route::get('/advanced', [Admin\Settings\AdvancedController::class, 'index'])->name('admin.settings.advanced');
+
+    Route::post('/mail/test', [Admin\Settings\MailController::class, 'test'])->name('admin.settings.mail.test');
+
+    Route::patch('/', [Admin\Settings\IndexController::class, 'update']);
+    Route::patch('/mail', [Admin\Settings\MailController::class, 'update']);
+    Route::patch('/advanced', [Admin\Settings\AdvancedController::class, 'update']);
+});
+
+/*
+|--------------------------------------------------------------------------
+| User Controller Routes
+|--------------------------------------------------------------------------
+|
+| Endpoint: /admin/users
+|
+*/
+Route::group(['prefix' => 'users'], function () {
+    Route::get('/', [Admin\UserController::class, 'index'])->name('admin.users');
+    Route::get('/accounts.json', [Admin\UserController::class, 'json'])->name('admin.users.json');
+    Route::get('/new', [Admin\UserController::class, 'create'])->name('admin.users.new');
+    Route::get('/view/{user:id}', [Admin\UserController::class, 'view'])->name('admin.users.view');
+
+    Route::post('/new', [Admin\UserController::class, 'store']);
+
+    Route::patch('/view/{user:id}', [Admin\UserController::class, 'update']);
+    Route::delete('/view/{user:id}', [Admin\UserController::class, 'delete'])->name('admin.users.delete');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Server Controller Routes
+|--------------------------------------------------------------------------
+|
+| Endpoint: /admin/servers
+|
+*/
+Route::group(['prefix' => 'servers'], function () {
+    Route::get('/', [Admin\Servers\ServerController::class, 'index'])->name('admin.servers');
+    Route::get('/new', [Admin\Servers\CreateServerController::class, 'index'])->name('admin.servers.new');
+    Route::get('/view/{server:id}', [Admin\Servers\ServerViewController::class, 'index'])->name('admin.servers.view');
+
+    Route::group(['middleware' => [ServerInstalled::class]], function () {
+        Route::get('/view/{server:id}/details', [Admin\Servers\ServerViewController::class, 'details'])->name('admin.servers.view.details');
+        Route::get('/view/{server:id}/build', [Admin\Servers\ServerViewController::class, 'build'])->name('admin.servers.view.build');
+        Route::get('/view/{server:id}/startup', [Admin\Servers\ServerViewController::class, 'startup'])->name('admin.servers.view.startup');
+        Route::get('/view/{server:id}/database', [Admin\Servers\ServerViewController::class, 'database'])->name('admin.servers.view.database');
+        Route::get('/view/{server:id}/mounts', [Admin\Servers\ServerViewController::class, 'mounts'])->name('admin.servers.view.mounts');
+    });
+
+    Route::get('/view/{server:id}/manage', [Admin\Servers\ServerViewController::class, 'manage'])->name('admin.servers.view.manage');
+    Route::get('/view/{server:id}/delete', [Admin\Servers\ServerViewController::class, 'delete'])->name('admin.servers.view.delete');
+
+    Route::post('/new', [Admin\Servers\CreateServerController::class, 'store']);
+    Route::post('/view/{server:id}/build', [Admin\ServersController::class, 'updateBuild']);
+    Route::post('/view/{server:id}/startup', [Admin\ServersController::class, 'saveStartup']);
+    Route::post('/view/{server:id}/database', [Admin\ServersController::class, 'newDatabase']);
+    Route::post('/view/{server:id}/mounts', [Admin\ServersController::class, 'addMount'])->name('admin.servers.view.mounts.store');
+    Route::post('/view/{server:id}/manage/toggle', [Admin\ServersController::class, 'toggleInstall'])->name('admin.servers.view.manage.toggle');
+    Route::post('/view/{server:id}/manage/suspension', [Admin\ServersController::class, 'manageSuspension'])->name('admin.servers.view.manage.suspension');
+    Route::post('/view/{server:id}/manage/reinstall', [Admin\ServersController::class, 'reinstallServer'])->name('admin.servers.view.manage.reinstall');
+    Route::post('/view/{server:id}/manage/transfer', [Admin\Servers\ServerTransferController::class, 'transfer'])->name('admin.servers.view.manage.transfer');
+    Route::post('/view/{server:id}/delete', [Admin\ServersController::class, 'delete']);
+
+    Route::patch('/view/{server:id}/details', [Admin\ServersController::class, 'setDetails']);
+    Route::patch('/view/{server:id}/database', [Admin\ServersController::class, 'resetDatabasePassword']);
+
+    Route::delete('/view/{server:id}/database/{database:id}/delete', [Admin\ServersController::class, 'deleteDatabase'])->name('admin.servers.view.database.delete');
+    Route::delete('/view/{server:id}/mounts/{mount:id}', [Admin\ServersController::class, 'deleteMount'])
+        ->name('admin.servers.view.mounts.delete');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Node Controller Routes
+|--------------------------------------------------------------------------
+|
+| Endpoint: /admin/nodes
+|
+*/
+Route::group(['prefix' => 'nodes'], function () {
+    Route::get('/', [Admin\Nodes\NodeController::class, 'index'])->name('admin.nodes');
+    Route::get('/new', [Admin\NodesController::class, 'create'])->name('admin.nodes.new');
+    Route::get('/view/{node:id}', [Admin\Nodes\NodeViewController::class, 'index'])->name('admin.nodes.view');
+    Route::get('/view/{node:id}/settings', [Admin\Nodes\NodeViewController::class, 'settings'])->name('admin.nodes.view.settings');
+    Route::get('/view/{node:id}/configuration', [Admin\Nodes\NodeViewController::class, 'configuration'])->name('admin.nodes.view.configuration');
+    Route::get('/view/{node:id}/allocation', [Admin\Nodes\NodeViewController::class, 'allocations'])->name('admin.nodes.view.allocation');
+    Route::get('/view/{node:id}/servers', [Admin\Nodes\NodeViewController::class, 'servers'])->name('admin.nodes.view.servers');
+    Route::get('/view/{node:id}/system-information', Admin\Nodes\SystemInformationController::class);
+
+    Route::post('/new', [Admin\NodesController::class, 'store']);
+    Route::post('/view/{node:id}/allocation', [Admin\NodesController::class, 'createAllocation']);
+    Route::post('/view/{node:id}/allocation/remove', [Admin\NodesController::class, 'allocationRemoveBlock'])->name('admin.nodes.view.allocation.removeBlock');
+    Route::post('/view/{node:id}/allocation/alias', [Admin\NodesController::class, 'allocationSetAlias'])->name('admin.nodes.view.allocation.setAlias');
+    Route::post('/view/{node:id}/settings/token', Admin\NodeAutoDeployController::class)->name('admin.nodes.view.configuration.token');
+
+    Route::patch('/view/{node:id}/settings', [Admin\NodesController::class, 'updateSettings']);
+
+    Route::delete('/view/{node:id}/delete', [Admin\NodesController::class, 'delete'])->name('admin.nodes.view.delete');
+    Route::delete('/view/{node:id}/allocation/remove/{allocation:id}', [Admin\NodesController::class, 'allocationRemoveSingle'])->name('admin.nodes.view.allocation.removeSingle');
+    Route::delete('/view/{node:id}/allocations', [Admin\NodesController::class, 'allocationRemoveMultiple'])->name('admin.nodes.view.allocation.removeMultiple');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Mount Controller Routes
+|--------------------------------------------------------------------------
+|
+| Endpoint: /admin/mounts
+|
+*/
+Route::group(['prefix' => 'mounts'], function () {
+    Route::get('/', [Admin\MountController::class, 'index'])->name('admin.mounts');
+    Route::get('/view/{mount:id}', [Admin\MountController::class, 'view'])->name('admin.mounts.view');
+
+    Route::post('/', [Admin\MountController::class, 'create']);
+    Route::post('/{mount:id}/eggs', [Admin\MountController::class, 'addEggs'])->name('admin.mounts.eggs');
+    Route::post('/{mount:id}/nodes', [Admin\MountController::class, 'addNodes'])->name('admin.mounts.nodes');
+
+    Route::patch('/view/{mount:id}', [Admin\MountController::class, 'update']);
+
+    Route::delete('/{mount:id}/eggs/{egg_id}', [Admin\MountController::class, 'deleteEgg']);
+    Route::delete('/{mount:id}/nodes/{node_id}', [Admin\MountController::class, 'deleteNode']);
+});
+
+/*
+|--------------------------------------------------------------------------
+| Nest Controller Routes
+|--------------------------------------------------------------------------
+|
+| Endpoint: /admin/nests
+|
+*/
+Route::group(['prefix' => 'nests'], function () {
+    Route::get('/', [Admin\Nests\NestController::class, 'index'])->name('admin.nests');
+    Route::get('/new', [Admin\Nests\NestController::class, 'create'])->name('admin.nests.new');
+    Route::get('/view/{nest:id}', [Admin\Nests\NestController::class, 'view'])->name('admin.nests.view');
+    Route::get('/egg/new', [Admin\Nests\EggController::class, 'create'])->name('admin.nests.egg.new');
+    Route::get('/egg/{egg:id}', [Admin\Nests\EggController::class, 'view'])->name('admin.nests.egg.view');
+    Route::get('/egg/{egg:id}/export', [Admin\Nests\EggShareController::class, 'export'])->name('admin.nests.egg.export');
+    Route::get('/egg/{egg:id}/variables', [Admin\Nests\EggVariableController::class, 'view'])->name('admin.nests.egg.variables');
+    Route::get('/egg/{egg:id}/scripts', [Admin\Nests\EggScriptController::class, 'index'])->name('admin.nests.egg.scripts');
+
+    Route::post('/new', [Admin\Nests\NestController::class, 'store']);
+    Route::post('/import', [Admin\Nests\EggShareController::class, 'import'])->name('admin.nests.egg.import');
+    Route::post('/egg/new', [Admin\Nests\EggController::class, 'store']);
+    Route::post('/egg/{egg:id}/variables', [Admin\Nests\EggVariableController::class, 'store']);
+
+    Route::put('/egg/{egg:id}', [Admin\Nests\EggShareController::class, 'update']);
+
+    Route::patch('/view/{nest:id}', [Admin\Nests\NestController::class, 'update']);
+    Route::patch('/egg/{egg:id}', [Admin\Nests\EggController::class, 'update']);
+    Route::patch('/egg/{egg:id}/scripts', [Admin\Nests\EggScriptController::class, 'update']);
+    Route::patch('/egg/{egg:id}/variables/{variable:id}', [Admin\Nests\EggVariableController::class, 'update'])->name('admin.nests.egg.variables.edit');
+
+    Route::delete('/view/{nest:id}', [Admin\Nests\NestController::class, 'destroy']);
+    Route::delete('/egg/{egg:id}', [Admin\Nests\EggController::class, 'destroy']);
+    Route::delete('/egg/{egg:id}/variables/{variable:id}', [Admin\Nests\EggVariableController::class, 'destroy']);
+});

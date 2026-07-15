@@ -1,0 +1,125 @@
+.button {
+    @apply px-4 py-2 inline-flex items-center justify-center;
+    @apply rounded-lg text-base font-semibold transition-all duration-150;
+    @apply focus:ring-[3px] focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-opacity-50;
+    cursor: pointer;
+
+    &:not(:disabled):hover {
+        transform: translateY(-1px);
+    }
+
+    &:not(:disabled):active {
+        transform: translateY(0) scale(0.98);
+    }
+
+    /* Sizing Controls */
+    &.small {
+        @apply px-4 py-0 h-8 font-normal text-sm focus:ring-2;
+    }
+
+    &.large {
+        @apply px-5 py-3;
+    }
+
+    &.secondary {
+        @apply text-gray-50 bg-transparent;
+
+        &:disabled {
+            background: transparent !important;
+        }
+    }
+
+    &:disabled {
+        @apply cursor-not-allowed;
+        transform: none;
+    }
+
+    &.square {
+        @apply p-0 w-12 h-12;
+
+        &.small {
+            @apply w-8 h-8;
+        }
+    }
+}
+
+.primary {
+    background: var(--gradient-accent, linear-gradient(135deg, #7382FF 0%, #a78bfa 100%));
+    color: #fff;
+    box-shadow: 0 2px 8px var(--color-accent-glow, rgba(115, 130, 255, 0.3)), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    @apply focus:ring-blue-400 focus:ring-opacity-75;
+
+    &:hover:not(:disabled),
+    &:active:not(:disabled) {
+        filter: brightness(1.12);
+        box-shadow: 0 4px 16px var(--color-accent-glow, rgba(115, 130, 255, 0.4)), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    }
+
+    &.secondary {
+        background: transparent;
+        color: var(--color-accent, #7382FF);
+        box-shadow: none;
+        border: 1px solid var(--color-accent, #7382FF);
+
+        &:hover:not(:disabled),
+        &:active:not(:disabled) {
+            background: var(--gradient-accent, linear-gradient(135deg, #7382FF 0%, #a78bfa 100%));
+            color: #fff;
+            filter: none;
+        }
+    }
+
+    &:disabled {
+        @apply bg-blue-500/75 text-blue-200/75;
+        background: rgba(115, 130, 255, 0.5);
+        box-shadow: none;
+    }
+}
+
+.text {
+    background: var(--color-surface, #1e1e2a);
+    color: var(--text-main, #e8e8f0);
+    border: 1px solid var(--color-border, #2a2a3a);
+    @apply focus:ring-gray-300 focus:ring-opacity-50;
+
+    &:hover:not(:disabled),
+    &:active:not(:disabled) {
+        background: var(--color-surface-hover, #252535);
+        border-color: var(--color-border-strong, #383850);
+    }
+
+    &.secondary {
+        background: transparent;
+        border-color: transparent;
+
+        &:hover:not(:disabled),
+        &:active:not(:disabled) {
+            background: var(--color-surface-hover, #252535);
+        }
+    }
+
+    &:disabled {
+        @apply bg-gray-500/75 text-gray-200/75;
+        box-shadow: none;
+    }
+}
+
+.danger {
+    @apply bg-red-600 text-gray-50;
+    @apply hover:bg-red-500 active:bg-red-500 focus:ring-red-400 focus:ring-opacity-75;
+    box-shadow: 0 2px 8px rgba(255, 71, 87, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+
+    &:hover:not(:disabled) {
+        box-shadow: 0 4px 14px rgba(255, 71, 87, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    }
+
+    &.secondary {
+        @apply hover:bg-red-600 active:bg-red-600;
+        box-shadow: none;
+    }
+
+    &:disabled {
+        @apply bg-red-600/75 text-red-50/75;
+        box-shadow: none;
+    }
+}
