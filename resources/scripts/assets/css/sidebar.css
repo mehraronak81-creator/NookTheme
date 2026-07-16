@@ -1,0 +1,493 @@
+/*
+VantaHost Theme System
+Dark & Light mode with smooth transitions
+*/
+
+/* ========== THEME VARIABLES ========== */
+:root,
+[data-theme="dark"] {
+    --color-primary: #0d1020;
+    --color-secondary: #171b30;
+    --color-tertiary: #111428;
+    --color-quaternary: #7c82a3;
+    --color-quinary: #a3a9c7;
+    --color-surface: #1a1e36;
+    --color-surface-hover: #222744;
+    --color-border: #272d4d;
+    --color-accent: #7c6cf7;
+    --color-accent-hover: #8f80ff;
+    --color-accent-glow: rgba(124, 108, 247, 0.35);
+    --color-danger: #ff5c6c;
+    --color-success: #34d97b;
+    --color-warning: #ffb020;
+    --color-info: #4d7cfe;
+    --button-color: #191d38;
+    --button-color-hover: #262c50;
+    --button-color-active: #7c6cf7;
+    --button-color-disabled: #7c82a3;
+    --button-color-text: #b4bad8;
+    --text-main: #edeffa;
+    --text-secondary: #b4bad8;
+    --text-tertiary: #8b91b5;
+    --text-muted: #5a608a;
+    --background-color: #090b18;
+    --invert: 1000;
+    --sidebar-button-color: #d3d7ee;
+    --sidebar-button-color-hover: #8f80ff;
+    --card-bg: #14182e;
+    --card-bg-hover: #1c2140;
+    --gradient-accent: linear-gradient(135deg, #7c6cf7 0%, #c74dfd 100%);
+    --gradient-surface: linear-gradient(180deg, #171b30 0%, #0f1226 100%);
+    --shadow-sm: 0 1px 3px rgba(3,5,16,0.5);
+    --shadow-md: 0 4px 14px rgba(3,5,16,0.55);
+    --shadow-lg: 0 10px 28px rgba(3,5,16,0.65);
+    --shadow-glow: 0 0 22px var(--color-accent-glow);
+    --topbar-bg: rgba(13, 16, 32, 0.85);
+    --topbar-border: #21264a;
+    --scrollbar-thumb: #2b3158;
+    --scrollbar-track: transparent;
+    --transition-speed: 0.25s;
+}
+
+[data-theme="light"] {
+    --color-primary: #eef1f8;
+    --color-secondary: #e2e6f2;
+    --color-tertiary: #f7f8fd;
+    --color-quaternary: #667088;
+    --color-quinary: #98a0b8;
+    --color-surface: #ffffff;
+    --color-surface-hover: #f1f3fb;
+    --color-border: #e2e6f2;
+    --color-accent: #6c5ce7;
+    --color-accent-hover: #5b4bd6;
+    --color-accent-glow: rgba(108, 92, 231, 0.18);
+    --color-danger: #e5484d;
+    --color-success: #18a058;
+    --color-warning: #e8930c;
+    --color-info: #3b82f6;
+    --button-color: #f1f3fb;
+    --button-color-hover: #e2e6f2;
+    --button-color-active: #6c5ce7;
+    --button-color-disabled: #cdd3e4;
+    --button-color-text: #4a5268;
+    --text-main: #171c2e;
+    --text-secondary: #4a5268;
+    --text-tertiary: #667088;
+    --text-muted: #98a0b8;
+    --background-color: #eef1f8;
+    --invert: 0;
+    --sidebar-button-color: #39415a;
+    --sidebar-button-color-hover: #6c5ce7;
+    --card-bg: #ffffff;
+    --card-bg-hover: #f7f8fd;
+    --gradient-accent: linear-gradient(135deg, #6c5ce7 0%, #a855f7 100%);
+    --gradient-surface: linear-gradient(180deg, #ffffff 0%, #f4f6fc 100%);
+    --shadow-sm: 0 1px 3px rgba(23,28,46,0.07);
+    --shadow-md: 0 4px 14px rgba(23,28,46,0.09);
+    --shadow-lg: 0 10px 28px rgba(23,28,46,0.12);
+    --shadow-glow: 0 0 22px var(--color-accent-glow);
+    --topbar-bg: rgba(255, 255, 255, 0.85);
+    --topbar-border: #e2e6f2;
+    --scrollbar-thumb: #cdd3e4;
+    --scrollbar-track: transparent;
+    --transition-speed: 0.25s;
+}
+
+/* ========== GLOBAL TRANSITIONS ========== */
+body,
+.sidebar,
+.topbar,
+.content-container,
+.content-dashboard,
+.nook-container {
+    transition: background-color var(--transition-speed) ease,
+                color var(--transition-speed) ease,
+                border-color var(--transition-speed) ease;
+}
+
+/* ========== SIDEBAR LAYOUT ========== */
+:root {
+    --sidebar-size: 240px;
+}
+
+/* ========== APPEARANCE: FONT SCALING ========== */
+/* Root font-size drives every rem-based measurement, giving accessible,
+   layout-aware font scaling. `:root` outranks the preflight `html` rule. */
+:root {
+    font-size: calc(16px * var(--font-scale, 1));
+}
+
+/* ========== APPEARANCE: COMPACT DENSITY ========== */
+[data-density="compact"] {
+    --sidebar-size: 210px;
+}
+
+[data-density="compact"] .sidebar a {
+    padding: 8px 14px;
+}
+
+[data-density="compact"] .icon {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    margin-right: 10px;
+}
+
+[data-density="compact"] .content-dashboard {
+    line-height: 1.35;
+}
+
+/* ========== APPEARANCE: COLLAPSED SIDEBAR ========== */
+/* Hide bare text link labels by zeroing the anchor font-size while the icon
+   keeps its own explicit size. */
+[data-sidebar="collapsed"] {
+    --sidebar-size: 78px;
+}
+
+@media screen and (min-width: 1151px) {
+    [data-sidebar="collapsed"] .sidebar a {
+        font-size: 0;
+        justify-content: center;
+        padding: 12px 0;
+    }
+
+    [data-sidebar="collapsed"] .sidebar .icon {
+        font-size: 0.9rem;
+        margin-right: 0;
+    }
+}
+
+/* ========== APPEARANCE: HIGH CONTRAST ========== */
+[data-contrast="high"] {
+    --color-border: #6a6a85;
+    --text-secondary: var(--text-main);
+    --text-tertiary: var(--text-main);
+    --text-muted: var(--text-secondary);
+}
+
+[data-contrast="high"][data-theme="light"] {
+    --color-border: #4b5563;
+}
+
+[data-contrast="high"] .sidebar a,
+[data-contrast="high"] .topbar {
+    font-weight: 600;
+}
+
+[data-contrast="high"] a:focus,
+[data-contrast="high"] button:focus,
+[data-contrast="high"] input:focus,
+[data-contrast="high"] select:focus {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+.nav-bar {
+    display: none;
+}
+
+.sidebar {
+    position: fixed;
+    margin: 0;
+    padding: 0;
+    width: var(--sidebar-size);
+    background: var(--gradient-surface);
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 9999;
+    height: calc(100vh - 3.5rem);
+    border-right: 1px solid var(--color-border);
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+}
+
+.content-container {
+    margin-left: calc(var(--sidebar-size) + 40px);
+    margin-right: 40px;
+}
+
+.content-dashboard {
+    max-width: 1200px;
+}
+
+.navbar-button {
+    display: none;
+}
+
+/* ========== SIDEBAR LINKS ========== */
+.sidebar a {
+    display: block;
+    color: var(--sidebar-button-color);
+    padding: 12px 16px;
+    text-decoration: none;
+    transition: all var(--transition-speed) ease;
+    border-left: 3px solid transparent;
+    font-size: 0.9rem;
+}
+
+.sidebar a:hover {
+    background-color: var(--color-surface-hover);
+    border-left-color: var(--color-accent);
+}
+
+.sidebar .active > .icon {
+    background: var(--gradient-accent);
+    color: white;
+    box-shadow: var(--shadow-glow);
+}
+
+.sidebar > a {
+    display: flex;
+    text-align: center;
+    align-items: center;
+}
+
+/* ========== SIDEBAR ICONS ========== */
+.icon {
+    border-radius: 10px;
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--button-color);
+    color: var(--button-color-text);
+    margin-right: 12px;
+    transition: all var(--transition-speed) ease;
+    font-size: 0.9rem;
+}
+
+.sidebar > a > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.sidebar a:hover:not(.active) > .icon {
+    background-color: var(--button-color-hover);
+    color: var(--color-accent);
+    transform: scale(1.05);
+}
+
+/* ========== PAGE CONTENT ========== */
+div.content {
+    margin-left: var(--sidebar-size);
+    padding: 1px 16px;
+    height: 1000px;
+}
+
+/* ========== MOBILE RESPONSIVE ========== */
+@media screen and (max-width: 1150px) {
+    .sidebar {
+        position: fixed;
+        width: 100%;
+        left: -1150px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .content-container {
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+
+    div.content {
+        margin-left: 0;
+        padding: 1px 16px;
+        height: 1000px;
+    }
+
+    .active-nav {
+        left: 0;
+        margin-right: var(--sidebar-size);
+        width: var(--sidebar-size);
+        height: calc(100vh - 3.5rem);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .nav-bar {
+        display: flex;
+    }
+
+    .navbar-button {
+        display: inline;
+        font-size: 1.5rem;
+        margin-left: 1rem;
+        cursor: pointer;
+        transition: color 0.2s ease;
+    }
+
+    .navbar-button:hover {
+        color: var(--color-accent);
+    }
+}
+
+/* ========== AVATAR ========== */
+.avatar {
+    margin: 10px;
+    width: 200px;
+    height: 200px;
+    border-radius: 12px;
+}
+
+.smallAvatar {
+    width: 70px;
+    border-radius: 50%;
+}
+
+.nav-bar > * {
+    margin: 10px;
+}
+
+.left {
+    margin-left: auto;
+}
+
+.openMenu {
+    font-size: 50px;
+}
+
+.openMenu:hover {
+    cursor: pointer;
+}
+
+/* ========== TOPBAR ========== */
+.topbar {
+    position: sticky;
+    margin-top: 0 !important;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    height: 3.5rem;
+    overflow-y: hidden;
+    background-color: var(--topbar-bg) !important;
+    border-bottom: 1px solid var(--topbar-border);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+/* ========== THEME TOGGLE BUTTON ========== */
+.theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 1rem;
+    margin: 0 6px;
+}
+
+.theme-toggle:hover {
+    background: var(--color-accent);
+    color: white;
+    border-color: var(--color-accent);
+    box-shadow: var(--shadow-glow);
+    transform: scale(1.05);
+}
+
+/* ========== VANTAHOST BRANDING ========== */
+.vanta-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.vanta-brand-icon {
+    width: 28px;
+    height: 28px;
+    background: var(--gradient-accent);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 14px;
+    box-shadow: var(--shadow-glow);
+}
+
+/* ========== SIDEBAR SECTION HEADERS ========== */
+.sidebar-section-header {
+    padding: 20px 16px 8px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+/* ========== SIDEBAR BOTTOM ========== */
+.sidebar-bottom {
+    padding: 12px 16px;
+    border-top: 1px solid var(--color-border);
+    margin-top: auto;
+}
+
+.sidebar-bottom-version {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+/* ========== PANEL POLISH ========== */
+/* Accent underline on the active sidebar link label for stronger affordance. */
+.sidebar .active {
+    color: var(--text-main);
+    background: linear-gradient(90deg, var(--color-accent-glow) 0%, transparent 70%);
+    border-left-color: var(--color-accent);
+}
+
+/* Card-style rows lift slightly on hover. */
+.content-dashboard a > div,
+.content-container a > div {
+    transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+}
+
+/* Consistent, visible keyboard focus everywhere (high-contrast mode widens this). */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 1px;
+    border-radius: 6px;
+}
+
+/* Frosted topbar — the rgba background + blur gives depth when scrolling. */
+.topbar {
+    box-shadow: var(--shadow-sm);
+}
+
+/* Subtle accent tint behind the page so large empty areas feel less flat. */
+body {
+    background-image: radial-gradient(1200px 500px at 85% -10%, var(--color-accent-glow), transparent 60%);
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+}
+
+[data-contrast="high"] body {
+    background-image: none;
+}
